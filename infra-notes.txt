@@ -1,0 +1,21 @@
+swagger ui: 
+	http://localhost:5010/v3/api-docs
+	http://localhost:5010/swagger-ui/index.html
+
+Docker Commands:
+	Create network:
+		docker network create --attachable -d bridge stockMarketNet
+	List networks: 
+		docker network ls
+	Check docker-compose version:
+		docker-compose --version
+	Run kafka with docker-compose:
+		docker-compose up -d 
+	Run MongoDb:
+		docker run -it -d --name mongo-container -p 27017:27017 --network stockMarketNet --restart always -v mongodb_data_container:/data/db mongo:latest
+	Run MySql:
+		docker run -it -d --name mysql-container -p 3306:3306 --network stockMarketNet -e MYSQL_ROOT_PASSWORD=stockMarketRootPw --restart always -v mysql_data_container:/var/lib/mysql mysql:latest
+	Run Adminer(Mysql Client Tool):
+		docker run -it -d --name adminer -p 8089:8089 --network stockMarketNet -e ADMINER_DEFAULT_SERVER=mysql-container --restart always adminer:latest
+	
+	docker exec -it example-mongo mongo
