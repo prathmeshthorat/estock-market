@@ -1,4 +1,4 @@
-package com.estockmarket.company.common.events;
+package com.estockmarket.cqrscore.commands.common.events;
 
 import java.util.Date;
 

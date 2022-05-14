@@ -2,6 +2,7 @@ package com.estockmarket.company.command.api.controllers;
 
 import java.util.logging.Logger;
 
+import com.estockmarket.cqrscore.commands.common.dto.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ import com.estockmarket.company.command.api.DeleteCompanyCommand;
 import com.estockmarket.company.command.api.RegisterComapnyCommand;
 import com.estockmarket.company.command.api.Validator;
 import com.estockmarket.company.command.api.dto.RegisterCompanyResponse;
-import com.estockmarket.company.common.dto.BaseResponse;
-import com.estockmarket.company.common.exception.BusinessException;
+
 import com.estockmarket.cqrscore.infra.CommandDispatcher;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/api/v1.0/market")
@@ -32,61 +35,38 @@ public class CompanyController {
 	@Autowired
 	private CommandDispatcher commandDispatcher;
 
+	@Operation(summary = "to register a company")
 	@PostMapping("/company/register")
 	public ResponseEntity<BaseResponse> registerCompany(@RequestBody RegisterComapnyCommand command) {
 		logger.info("Registering comapany: ");
-		try {
-			Validator.validate(command);
+			Validator.validateRequest(command);
 			command.setId(command.getCompanyCode());
 			commandDispatcher.send(command);
 			logger.info("Dispatched RegisterComapnyCommand: " + command);
-			return new ResponseEntity<BaseResponse>(
-					new RegisterCompanyResponse("Company registered successfully.", command.getCompanyCode()),
-					HttpStatus.OK);
-		} catch (BusinessException e) {
-			logger.info("Exception while registering comapany: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			logger.info("Exception while registering comapany: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+			return new ResponseEntity<BaseResponse>(new RegisterCompanyResponse("Company registered successfully.", command.getCompanyCode()), HttpStatus.OK);
 	}
 
+	@Operation(summary = "adding stockPrice to a company")
 	@PostMapping("/stock/add/{companyCode}")
 	public ResponseEntity<BaseResponse> addNewStockPrice(@PathVariable("companyCode") String companyCode,
 			@RequestBody AddStockPriceCommand command) {
 		logger.info("Adding stock price for comapany: " + companyCode);
-		try {
 			command.setId(companyCode);
 			commandDispatcher.send(command);
 			return new ResponseEntity<BaseResponse>(
 					new BaseResponse("New stock price added for company code: " + companyCode), HttpStatus.OK);
-		} catch (BusinessException e) {
-			logger.info("Exception while registering comapany: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			logger.info("Exception while adding stock price for company: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 
+	@Operation(summary = "deleting a company")
 	@DeleteMapping("/company/delete/{companyCode}")
 	public ResponseEntity<BaseResponse> deleteCompany(@PathVariable("companyCode") String companyCode) {
 		logger.info("Deleting comapany: " + companyCode);
-		try {
 			DeleteCompanyCommand command = new DeleteCompanyCommand(companyCode);
 			command.setId(companyCode);
 			commandDispatcher.send(command);
 			return new ResponseEntity<BaseResponse>(
 					new BaseResponse(String.format("Company with company code: %s deleted successfully.", companyCode)),
 					HttpStatus.OK);
-		} catch (BusinessException e) {
-			logger.info("Exception while deleting comapany: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			logger.info("Exception while deleting comapany: " + e.getMessage());
-			return new ResponseEntity<BaseResponse>(new BaseResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 
 }
