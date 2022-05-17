@@ -19,3 +19,10 @@ Docker Commands:
 		docker run -it -d --name adminer -p 8089:8089 --network stockMarketNet -e ADMINER_DEFAULT_SERVER=mysql-container --restart always adminer:latest
 	
 	docker exec -it example-mongo mongo
+	
+	
+kafka-topics.sh --create --topic logs --bootstrap-server estock-market_kafka_1:9092
+
+kafka-topics.sh --create --topic logs --bootstrap-server estock-market_kafka_1:9092
+
+kafka-console-consumer.sh --bootstrap-server estock-market_kafka_1:9092 --topic logs
