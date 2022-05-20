@@ -21,3 +21,9 @@ management:
     web:
       exposure:
         include: '*'
+okta:
+  oauth2:
+    issuer: https://dev-88296233.okta.com/oauth2/default
+    client-id: 0oa53jhhxiIUDIPhO5d7
+    client-secret: 1D1zSby9Oxzn6i-psXXvKndipaAe5zYgK3Z1yXnA
+    redirect-uri: /authorization-code/callback
