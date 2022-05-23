@@ -2,13 +2,28 @@ server:
   port: 5000
 
 spring:
-  application:    name: company-command
-  data:    mongodb:      #host: localhost
+  application:
+    name: company-command
+  data:
+    mongodb:
+      #host: localhost
       #port: 27017
-      uri: mongodb+srv://estock-market-admin-user:{password}@estockmarket.qwgu1.mongodb.net/estockmarket?retryWrites=true&w=majority
+      uri: mongodb+srv://estock-market-admin-user:FfPiVBLEKgMbDr6G@estockmarket.qwgu1.mongodb.net/estockmarket?retryWrites=true&w=majority
       database: estockmarket
   
-  kafka:   producer:      bootstrap-servers: localhost:9092
+  kafka:
+   producer:
+      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+okta:
+  oauth2:
+    issuer: https://dev-88296233.okta.com/oauth2/default
+    client-id: 0oa53jhhxiIUDIPhO5d7
+    client-secret: 1D1zSby9Oxzn6i-psXXvKndipaAe5zYgK3Z1yXnA
+    redirect-uri: /authorization-code/callback

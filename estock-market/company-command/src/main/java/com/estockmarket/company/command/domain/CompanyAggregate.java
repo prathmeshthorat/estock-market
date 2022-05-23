@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import com.estockmarket.company.command.api.RegisterComapnyCommand;
-import com.estockmarket.company.common.events.CompanyDeletedEvent;
-import com.estockmarket.company.common.events.CompanyRegisteredEvent;
-import com.estockmarket.company.common.events.StockPriceAddedEvent;
+import com.estockmarket.cqrscore.commands.common.events.CompanyDeletedEvent;
+import com.estockmarket.cqrscore.commands.common.events.CompanyRegisteredEvent;
+import com.estockmarket.cqrscore.commands.common.events.StockPriceAddedEvent;
 import com.estockmarket.cqrscore.domain.AggregateRoot;
 import com.estockmarket.cqrscore.events.BaseEvent;
 

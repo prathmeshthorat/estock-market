@@ -1,4 +1,4 @@
-package com.estockmarket.company.common.dto;
+package com.estockmarket.cqrscore.commands.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

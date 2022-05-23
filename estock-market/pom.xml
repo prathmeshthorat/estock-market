@@ -14,6 +14,5 @@
 		<module>../cqrs-es/cqrs-core</module>
 		<module>company-query</module>
 		<module>company-command</module>
-		<module>company-common</module>
 	</modules>
 </project>

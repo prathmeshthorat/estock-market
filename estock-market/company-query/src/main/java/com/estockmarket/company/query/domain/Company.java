@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.estockmarket.company.common.dto.StockExchnage;
 import com.estockmarket.cqrscore.domain.BaseEntity;
 
 import lombok.AllArgsConstructor;

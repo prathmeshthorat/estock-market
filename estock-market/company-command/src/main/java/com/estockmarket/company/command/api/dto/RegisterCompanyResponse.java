@@ -1,7 +1,7 @@
 package com.estockmarket.company.command.api.dto;
 
-import com.estockmarket.company.common.dto.BaseResponse;
 
+import com.estockmarket.cqrscore.commands.common.dto.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
