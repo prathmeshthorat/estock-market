@@ -1,0 +1,7 @@
+zuul:
+  routes:
+    company-command:
+      path: /company/**
+      url: http://localhost:5000
+    company-query:
+      url: http://localhost:5010           
