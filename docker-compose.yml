@@ -14,7 +14,7 @@ services:
   kafka:
     image: bitnami/kafka
     container_name: kafka
-    hostname: kafkaserver
+    hostname: kafka
     ports:
       - "9092:9092"
     restart: always
@@ -56,7 +56,9 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - "H:/software-development/micro-services/estock-market/estock-market/company-command/src/main/resources/prometheus.yml"
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
     expose:
       - 9090
   grafana:
@@ -67,6 +69,43 @@ services:
       - "3030:3000"
     expose:
       - 3000
+  elasticsearch:
+    image: elasticsearch:7.16.3
+    container_name: elasticsearch
+    restart: always
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: "stockMarketRootPw"
+      discovery.type: single-node
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+  kibana:
+    image: kibana:7.16.3
+    container_name: kibana
+    restart: always
+    ports:
+      - '5601:5601'
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    links:
+      - elasticsearch:elasticsearch
+    depends_on: [ 'elasticsearch' ]
+  logstash:
+    image: logstash:7.16.3
+    container_name: logstash
+    restart: always
+    volumes:
+      - ./logstash/:/logstash_dir
+    command: logstash -f /logstash_dir/logstash.conf
+    ports:
+      - '9600:9600'
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    links:
+      - elasticsearch:elasticsearch
+      - kafka:kafka
+    depends_on: [ 'elasticsearch', 'kafka' ]
 
 volumes:
   zookeeper_data:
@@ -75,40 +114,9 @@ volumes:
     driver: local
   mysql_data_container:
     driver: local
+  prometheus-data:
+    driver: local
 
 networks:
   stockMarketNet:
     driver: bridge
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
-  #   container_name: elasticsearch
-  #   # Make a port available to services outside of Docker
-  #   ports:
-  #     - 9200:9200
-  #     - 9300:9300
-  #   # Configures docker image to run in bridge mode network
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:6.4.0
-  #   container_name: kibana
-  #   # Make a port available to services outside of Docker
-  #   ports:
-  #     - 5601:5601
-  #   # It Links kibana container & elasticsearch container to communicate
-  #   links:
-  #     - elasticsearch:elasticsearch
-  #   # Configures docker image to run in bridge mode network
-  #   # You can control the order of service startup and shutdown with the depends_on option.
-  #   depends_on: ['elasticsearch']
-  # logstash:
-  #   image: docker.elastic.co/logstash/logstash:6.4.0
-  #   container_name: logstash
-  #   # It Links elasticsearch container & kafka container  & logstash container to communicate
-  #   links:
-  #     - elasticsearch:elasticsearch
-  #     - kafka:kafka
-  #   # Configures docker image to run in bridge mode network
-  #   # You can control the order of service startup and shutdown with the depends_on option.
-  #   depends_on: ['elasticsearch', 'kafka']
-  #   # Mount host volumes into docker containers to supply logstash.config file
-  #   volumes:
-  #     - '/private/config-dir:/usr/share/logstash/pipeline/'
