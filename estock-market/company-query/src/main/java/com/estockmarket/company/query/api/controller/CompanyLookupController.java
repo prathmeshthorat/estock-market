@@ -4,6 +4,7 @@ import com.estockmarket.company.query.api.queries.FindAllCompaniesQuery;
 import com.estockmarket.company.query.api.queries.FindCompanyByCodeQuery;
 import com.estockmarket.company.query.api.queries.FindStockPriceBetweenIntervalsQuery;
 import com.estockmarket.company.query.dto.CompanyLookupResponse;
+import com.estockmarket.company.query.utils.ResultUtils;
 import com.estockmarket.cqrscore.domain.BaseEntity;
 import com.estockmarket.cqrscore.infra.QueryDispatcher;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -66,9 +68,10 @@ public class CompanyLookupController {
                 .companyCode(companyCode).startDate(startDate).endDate(endDate).build();
         logger.info("findStockPriceBetweenInterval : " + query);
         List<BaseEntity> result = queryDispatcher.send(query);
+        CompanyLookupResponse response = ResultUtils.getResultStats(result);
         logger.info("Dispatched FindAllCompaniesQuery: ");
-        CompanyLookupResponse response = CompanyLookupResponse.builder().data(result).message(SUCCESS).build();
         return new ResponseEntity<CompanyLookupResponse>(response, HttpStatus.OK);
     }
+
 
 }

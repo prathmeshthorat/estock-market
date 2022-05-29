@@ -16,6 +16,9 @@ import java.util.List;
 public class CompanyLookupResponse extends BaseResponse {
 
     private List<BaseEntity> data;
+    private double min;
+    private double max;
+    private double avg;
 
     public CompanyLookupResponse(String message) {
         super(message);
