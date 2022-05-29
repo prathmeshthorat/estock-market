@@ -4,6 +4,7 @@ services:
   zookeeper:
     image: bitnami/zookeeper
     restart: always
+    container_name: zookeeper
     ports:
       - "2181:2181"
     volumes:
@@ -12,6 +13,8 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
     image: bitnami/kafka
+    container_name: kafka
+    hostname: kafka
     ports:
       - "9092:9092"
     restart: always
@@ -24,14 +27,96 @@ services:
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
     depends_on:
       - zookeeper
+  mysql-container:
+    image: mysql:latest
+    container_name: readdb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=stockMarketRootPw
+    expose:
+      - 3306
+    volumes:
+      - "mysql_data_container:/var/lib/mysql mysql:latest"
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=mysql-container
+    expose:
+      - 8080
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+    expose:
+      - 9090
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - "3030:3000"
+    expose:
+      - 3000
+  elasticsearch:
+    image: elasticsearch:7.16.3
+    container_name: elasticsearch
+    restart: always
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: "stockMarketRootPw"
+      discovery.type: single-node
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+  kibana:
+    image: kibana:7.16.3
+    container_name: kibana
+    restart: always
+    ports:
+      - '5601:5601'
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    links:
+      - elasticsearch:elasticsearch
+    depends_on: [ 'elasticsearch' ]
+  logstash:
+    image: logstash:7.16.3
+    container_name: logstash
+    restart: always
+    volumes:
+      - ./logstash/:/logstash_dir
+    command: logstash -f /logstash_dir/logstash.conf
+    ports:
+      - '9600:9600'
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    links:
+      - elasticsearch:elasticsearch
+      - kafka:kafka
+    depends_on: [ 'elasticsearch', 'kafka' ]
 
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
     driver: local
-   
+  mysql_data_container:
+    driver: local
+  prometheus-data:
+    driver: local
+
 networks:
-  default:
-    external:
-      name: stockMarketNet
+  stockMarketNet:
+    driver: bridge
