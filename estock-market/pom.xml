@@ -14,5 +14,6 @@
 		<module>../cqrs-es/cqrs-core</module>
 		<module>company-query</module>
 		<module>company-command</module>
+		<module>../zuul-gateway</module>
 	</modules>
 </project>
