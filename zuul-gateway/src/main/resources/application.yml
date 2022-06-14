@@ -1,0 +1,31 @@
+server:
+ port: 9090
+
+zuul:
+  routes:
+    company-command:
+      path: /api/v1.0/market/**
+      url: http://localhost:5000/api/v1.0/market/
+    company-query:
+      path: /api/v1.0/market/**
+      url: http://localhost:5010/api/v1.0/market/
+
+spring:
+ security:
+    oauth2:
+      client:
+        registration:
+          oauth2-client-credentials:
+            client-id: zuul-oauth2-client
+            client-secret: pbtzeYO20gdOJMRsngDPNskayKXBalPY
+            provider: keycloak
+            scope: openid, profile, roles
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/auth/realms/zuul-oauth2
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/zuul-oauth2
+          jwk-set-uri: http://localhost:8180/auth/realms/zuul-oauth2/protocol/openid-connect/certs
+

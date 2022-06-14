@@ -1,4 +1,4 @@
-package com.estockmarket.company.command.config;
+package com.estockmarket.zuul.gateway.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

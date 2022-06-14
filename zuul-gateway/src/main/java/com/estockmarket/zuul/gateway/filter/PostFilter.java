@@ -1,6 +1,6 @@
 package com.estockmarket.zuul.gateway.filter;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +10,12 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
 @Component
-public class PreFilter extends ZuulFilter {
-	private static Logger log = LoggerFactory.getLogger(PreFilter.class);
+public class PostFilter extends ZuulFilter {
+	private static Logger log = LoggerFactory.getLogger(PostFilter.class);
 
 	  @Override
 	  public String filterType() {
-	    return "pre";
+	    return "post";
 	  }
 
 	  @Override
@@ -30,10 +30,9 @@ public class PreFilter extends ZuulFilter {
 
 	  @Override
 	  public Object run() {
-	    RequestContext ctx = RequestContext.getCurrentContext();
-	    HttpServletRequest request = ctx.getRequest();
-
-	    log.info("PreFilter: " + String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
+	    HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
+	    
+	    log.info("PostFilter: " + String.format("response's content type is %s", response.getStatus()));
 	    
 	    return null;
 	  }
