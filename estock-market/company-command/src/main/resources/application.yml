@@ -2,13 +2,38 @@ server:
   port: 5000
 
 spring:
-  application:    name: company-command
-  data:    mongodb:      #host: localhost
-      #port: 27017
-      uri: mongodb+srv://estock-market-admin-user:{password}@estockmarket.qwgu1.mongodb.net/estockmarket?retryWrites=true&w=majority
+  application:
+    name: company-command
+  data:
+    mongodb:
+      uri: mongodb+srv://estock-market-admin-user:FfPiVBLEKgMbDr6G@estockmarket.qwgu1.mongodb.net/estockmarket?retryWrites=true&w=majority
       database: estockmarket
   
-  kafka:   producer:      bootstrap-servers: localhost:9092
+  kafka:
+   producer:
+      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      
+  security:
+    oauth2:
+      client:
+        registration:
+          oauth2-client-credentials:
+            client-id: estockmarket-client-creds
+            client-secret: FnY5BmM2FdQNhbqJCaDU0D336OOKrd0x
+            provider: keycloak
+            scope: openid, profile, roles
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/estockmarket
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/estockmarket
+          jwk-set-uri: http://localhost:8080/realms/estockmarket/protocol/openid-connect/certs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

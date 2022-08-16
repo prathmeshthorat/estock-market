@@ -2,34 +2,56 @@ package com.estockmarket.company.command.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.estockmarket.company.common.exception.BusinessException;
+import com.estockmarket.cqrscore.exceptions.BusinessException;
+import com.estockmarket.cqrscore.exceptions.Constants;
+import com.estockmarket.cqrscore.exceptions.ErrorCodes;
+import com.estockmarket.cqrscore.exceptions.Error;
+
 
 public class Validator {
 
-	public static void validate(RegisterComapnyCommand command) {
-		List<String> errors = new ArrayList<>();
-		if (isNullOrEmpty(command.getCompanyCode()))
-			errors.add("Null or empty companyCode");
-		if (isNullOrEmpty(command.getCompanyCEO()))
-			errors.add("Null or empty companyCEO");
-		if (isNullOrEmpty(command.getCompanyName()))
-			errors.add("Null or empty companyName");
-		if (isNullOrEmpty(command.getWebsite()))
-			errors.add("Null or empty website");
-		if (null == command.getStockExng())
-			errors.add("Null or empty stockExng");
-		if (command.getCompanyTurnover() <= 100000000)
-			errors.add("company turnover less than 10Cr");
-		if (!errors.isEmpty() && errors.size() > 0)
-			throw new BusinessException(errors.stream().collect(Collectors.joining(", ")));
+	public static void validateRequest(RegisterComapnyCommand command) {
+		List<Error> listErrors= new ArrayList<>();
+		validate(command,listErrors);
+		if(!listErrors.isEmpty()) {
+			throw new BusinessException(ErrorCodes.BAD_REQUEST,listErrors);
+		}
+		
 	}
 
-	public static boolean isNullOrEmpty(String value) {
-		if (null != value && "".equalsIgnoreCase(value))
-			return true;
-		return false;
+	public static final String formatErrorMessage(String data) {
+		return Constants.COLON  + Constants.OPEN_BRACKET + data + Constants.CLOSE_BRACKET;
+	}
+	
+	public static boolean isEmpty(String str) {
+		return (str == null || str.trim().length() == 0);
+	}
+	
+	private static void validate(RegisterComapnyCommand command, List<Error> listErrors) {
+		  if(command ==null) {
+			  listErrors.add(ErrorCodes.MISSING_HTTP_BODY.getError(formatErrorMessage("message/request body")));
+		  } else {
+			  if(isEmpty(command.getCompanyCode())) {
+				  listErrors.add(ErrorCodes.MISSING_MANDATORY_FIELD.getError(formatErrorMessage("companyCode")));  
+			  }
+			  if(isEmpty(command.getCompanyCEO())) {
+				  listErrors.add(ErrorCodes.MISSING_MANDATORY_FIELD.getError(formatErrorMessage("companyCEO")));  
+			  }
+			  if(isEmpty(command.getCompanyName())) {
+				  listErrors.add(ErrorCodes.MISSING_MANDATORY_FIELD.getError(formatErrorMessage("companyName")));  
+			  }
+			  if(isEmpty(command.getWebsite())) {
+				  listErrors.add(ErrorCodes.MISSING_MANDATORY_FIELD.getError(formatErrorMessage("website")));  
+			  }
+			  if(isEmpty(command.getStockExng().toString())) {
+				  listErrors.add(ErrorCodes.MISSING_MANDATORY_FIELD.getError(formatErrorMessage("stockExchange")));  
+			  }
+			  if(command.getCompanyTurnover()  <= 100000000) {
+				  listErrors.add(ErrorCodes.FIELD_CONSTRAINT_VIOLATION.getError(formatErrorMessage("companyTurnover")));  
+			  }
+		  }
+		   
 	}
 
 }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3e69983a-55e0-443d-9625-53aa42471811",
+		"_postman_id": "69577264-e558-40e8-ac79-751c88e7e968",
 		"name": "stock-market",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,16 +9,51 @@
 			"name": "register-company",
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
+					"type": "oauth2",
+					"oauth2": [
 						{
-							"key": "password",
-							"value": "fa5f908b-8fd9-432f-b887-e7ae89929e9e",
+							"key": "clientId",
+							"value": "estockmarket-client-creds",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "user",
+							"value": "test_user",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Pass@123",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "http://localhost:8080/realms/estockmarket/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "FnY5BmM2FdQNhbqJCaDU0D336OOKrd0x",
 							"type": "string"
 						}
 					]
@@ -36,7 +71,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"companyCode\": \"CTZ\",\n    \"companyName\": \"Cognizant\",\n    \"companyCEO\": \"Brian\",\n    \"companyTurnover\": 100000001,\n    \"website\": \"Cognizant.com\",\n    \"createdBy\": \"user@1\",\n    \"stockExng\": \"NSE\"\n}"
+					"raw": "{\n    \"companyCode\": \"Testq1\",\n    \"companyName\": \"Cognizant\",\n    \"companyCEO\": \"Brian\",\n    \"companyTurnover\": 100000001,\n    \"website\": \"Cognizant.com\",\n    \"createdBy\": \"user@1\",\n    \"stockExng\": \"NSE\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:5000/api/v1.0/market/company/register",
@@ -87,6 +122,66 @@
 		{
 			"name": "add-stockprice",
 			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "clientSecret",
+							"value": "FnY5BmM2FdQNhbqJCaDU0D336OOKrd0x",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "test_user",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "accessToken",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhVlNjRXVYbkEwZlpJS0UtVTVMV1dWU1JmMmhXZUdVUU1QQXFFMzZHZ0lrIn0.eyJleHAiOjE2NTM4MzA1NzAsImlhdCI6MTY1MzgzMDI3MCwianRpIjoiMmYwMmIyZTctYjE3Yy00ODkzLWE0ZjctYjAyNjUxODU3NzE4IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9lc3RvY2ttYXJrZXQiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZTgwYzVhMjUtMjBmMS00MmJkLWJlODUtOGM2NjhiOTkzZTVmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZXN0b2NrbWFya2V0LWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI0YjRhMjE1My04ODgyLTQ0MjAtOWMyZi04ODgyYjI0MjU0MzkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1lc3RvY2ttYXJrZXQiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiZXN0b2NrbWFya2V0X3VzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwic2lkIjoiNGI0YTIxNTMtODg4Mi00NDIwLTljMmYtODg4MmIyNDI1NDM5IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInByZWZlcnJlZF91c2VybmFtZSI6ImVzdG9ja21hcmtldF91c2VyIn0.eg3KUOcO1aIZUOJVem_oGOj_Pjd0KjPNZcCYFbu1k5D_MOTIkyQSIKNj4bndB1D7bYDw1ZugyllRidBzhXoeDsR0khxesqx0sEvZFmR7I6Aulh4DpBu4KI92tsr8etJrUu6YWWzbLyJ04_TH2T2xM6Qw_ZbRCk9R7cdu8l966JR8NC8URhZWwAYoBo32-VoojyIicWTva1P7xfT01Yfb4DYJpEdOqhTGgqMcuv8tQyShsvlWmnUlHE6P0rxmM0qgVJkOF2oHlHWGqldfk3vcrNWMzD_4Hwe2BkjL9BfAmJaJ175RXwoYMOqU-x7WMqa_Od3RJDx3RGnKpieaUoZcUw",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Pass@123",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "estockmarket-client",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "http://localhost:8080/realms/estockmarket/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -200,6 +295,74 @@
 						"company",
 						"info",
 						"CTZ"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "keycloak-token",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "FnY5BmM2FdQNhbqJCaDU0D336OOKrd0x",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "estockmarket-client-creds",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Pass@123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "estockmarket_user",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "http://localhost:8080/realms/estockmarket/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/realms/estockmarket/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"realms",
+						"estockmarket",
+						"protocol",
+						"openid-connect",
+						"token"
 					]
 				}
 			},

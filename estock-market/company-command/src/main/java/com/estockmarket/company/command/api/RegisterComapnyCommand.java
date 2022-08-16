@@ -2,9 +2,9 @@ package com.estockmarket.company.command.api;
 
 import java.util.Date;
 
-import com.estockmarket.company.common.dto.StockExchnage;
 import com.estockmarket.cqrscore.commands.BaseCommand;
 
+import com.estockmarket.cqrscore.commands.common.dto.StockExchnage;
 import lombok.Data;
 
 @Data
