@@ -12,3 +12,4 @@
 7. Get Access token using postman request available in git repository.
 8. Use Postman collection to test other services.
 
+![Flow Diagram](https://github.com/prathmeshthorat/estock-market/blob/main/FlowDiagram.png)
